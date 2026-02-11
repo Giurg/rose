@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💌</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at top, #ffe3e3, #ffb6c1);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CONTENITORE */
+#container {
+    text-align: center;
+    z-index: 2;
+    max-width: 90%;
+}
+
+#introText {
+    color: #d6336c;
+    font-size: 24px;
+    margin-bottom: 20px;
+    min-height: 60px;
+}
+
+#question {
+    color: #d6336c;
+    font-size: 28px;
+    margin-bottom: 30px;
+    min-height: 40px;
+}
+
+/* BOTTONI */
+button {
+    font-size: 18px;
+    padding: 14px 30px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+#yes {
+    background: linear-gradient(135deg, #ff4d6d, #ff758f);
+    color: white;
+    margin-right: 15px;
+}
+
+#no {
+    background: #eee;
+    color: #555;
+    position: relative;
+}
+
+/* LETTERA */
+#letterScene {
+    display: none;
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+}
+
+.envelope {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f8d7da;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}
+
+.flap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #f1aeb5;
+    clip-path: polygon(0 0, 50% 60%, 100% 0);
+    transform-origin: top;
+    transition: transform 1.2s ease;
+}
+
+/* LETTERA INTERNA */
+.letter {
+    position: absolute;
+    width: 90%;
+    height: 160%;
+    background: #fff;
+    top: 100%;
+    left: 5%;
+    border-radius: 15px;
+    text-align: center;
+    transition: top 1.5s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: #d6336c;
+}
+
+/* CUORI */
+.heart {
+    position: absolute;
+    color: rgba(214,51,108,0.7);
+    font-size: 20px;
+    animation: float 10s linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(-10vh) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    to { transform: translateY(110vh) scale(1.6); opacity: 0; }
+}
+
+/* FINALE TI AMO */
+#finalMessage {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    font-size: 48px;
+    color: #d6336c;
+    text-align: center;
+    animation: pop 1s forwards;
+    z-index: 3;
+}
+
+@keyframes pop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+    <div id="introText"></div>
+    <div id="question"></div>
+    <button id="yes">Sì 💖</button>
+    <button id="no">No</button>
+</div>
+
+<div id="letterScene">
+    <div class="envelope">
+        <div class="flap" id="flap"></div>
+        <div class="letter" id="letter">
+            Ti amo da morire ❤️
+        </div>
+    </div>
+</div>
+
+<!-- MUSICA -->
+<audio id="romanticMusic" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" autoplay loop></audio>
+
+<script>
+// TESTO INIZIALE CON EFFETTO MACCHINA DA SCRIVERE
+const introText = "Ciao amore, oggi voglio chiederti qualcosa di speciale… 💕";
+const questionText = "Will you be my Valentine?";
+const introDiv = document.getElementById("introText");
+const questionDiv = document.getElementById("question");
+let i = 0;
+
+function typeIntro() {
+    if(i < introText.length){
+        introDiv.innerHTML += introText.charAt(i);
+        i++;
+        setTimeout(typeIntro, 50);
+    } else {
+        typeQuestion(0);
+    }
+}
+
+function typeQuestion(j){
+    if(j < questionText.length){
+        questionDiv.innerHTML += questionText.charAt(j);
+        setTimeout(() => typeQuestion(j+1), 80);
+    }
+}
+
+typeIntro();
+
+// PULSANTE NO CHE SCAPPA
+const noBtn = document.getElementById("no");
+function moveNo() {
+    const x = Math.random() * (window.innerWidth - noBtn.clientWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.clientHeight);
+    noBtn.style.position = "absolute";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+// PULSANTE SÌ → LETTERA
+const yesBtn = document.getElementById("yes");
+const container = document.getElementById("container");
+const letterScene = document.getElementById("letterScene");
+const flap = document.getElementById("flap");
+const letter = document.getElementById("letter");
+const music = document.getElementById("romanticMusic");
+
+yesBtn.addEventListener("click", () => {
+    container.style.display = "none";
+    letterScene.style.display = "block";
+
+    setTimeout(() => flap.style.transform = "rotateX(180deg)", 500);
+    setTimeout(() => letter.style.top = "0", 1200);
+
+    // CUORI
+    function createHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "♥";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (Math.random() * 14 + 16) + "px";
+        heart.style.animationDuration = (Math.random() * 4 + 6) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 10000);
+    }
+    setInterval(createHeart, 300);
+});
+</script>
+
+</body>
+</html>
