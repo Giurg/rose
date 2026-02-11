@@ -33,7 +33,7 @@ body {
     color: #d6336c;
     font-size: 28px;
     margin-bottom: 30px;
-    min-height: 40px;
+    min-height: 60px;
 }
 
 /* BOTTONI */
@@ -159,12 +159,12 @@ button {
 </div>
 
 <!-- MUSICA -->
-<audio id="romanticMusic" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" autoplay loop></audio>
+<audio id="romanticMusic" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" loop></audio>
 
 <script>
 // TESTO INIZIALE CON EFFETTO MACCHINA DA SCRIVERE
-const introText = "Ciao amore, oggi voglio chiederti qualcosa di speciale… 💕";
-const questionText = "Will you be my Valentine?";
+const introText = "Ciao amore, oggi voglio chiederti qualcosa…";
+const questionText = "So che non so essere sempre giusto e so che sbaglio molto spesso, ma mi prometti che mi ami e che faremo sempre pace 💕";
 const introDiv = document.getElementById("introText");
 const questionDiv = document.getElementById("question");
 let i = 0;
@@ -182,7 +182,7 @@ function typeIntro() {
 function typeQuestion(j){
     if(j < questionText.length){
         questionDiv.innerHTML += questionText.charAt(j);
-        setTimeout(() => typeQuestion(j+1), 80);
+        setTimeout(() => typeQuestion(j+1), 40); // leggermente più veloce per testo lungo
     }
 }
 
@@ -215,6 +215,9 @@ yesBtn.addEventListener("click", () => {
     setTimeout(() => flap.style.transform = "rotateX(180deg)", 500);
     setTimeout(() => letter.style.top = "0", 1200);
 
+    // far partire la musica anche su iOS
+    music.play().catch(() => {});
+
     // CUORI
     function createHeart() {
         const heart = document.createElement("div");
@@ -229,6 +232,9 @@ yesBtn.addEventListener("click", () => {
     setInterval(createHeart, 300);
 });
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
